@@ -28,7 +28,7 @@
         <li><b>500+ material UI components</b></li>
          <li>Super simple, 1 minute installation</li>
          <li>Detailed docs & multiple practical examples</li>
-         <li>React 17</li>
+         <li>Vue 3</li>
          <li>Huge and active community</li>
          <li><b>MIT license - free for personal & commercial use</b></li>
         </ul>
@@ -98,7 +98,7 @@ Trusted by <b>2 000 000+</b> developers & designers. Used by companies like
 
 # Demo
 
-#### Simplicity and ease of use are key features of MDB 5 React UI Kit. You need only one minute to install and run it.
+#### Simplicity and ease of use are key features of MDB 5 Vue UI Kit. You need only one minute to install and run it.
 
 ### Buttons
 
