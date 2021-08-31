@@ -1,35 +1,54 @@
-export default {
+const ScrollSpy = {
   inserted(el, binding, vnode) {
-    let container = window;
-    let visible = 0.5;
+    el.scrollSpy = {
+      spy: null,
+      findHrefs: null,
+      setActive: null,
+      clickHandler: null,
+      links: [],
+      container: window,
+      scrollPosition: null,
+      visible: 0.5
+    };
+
     if (binding.value) {
-      container = document.getElementById(binding.value.container) || window;
-      visible = binding.value.visible || 0.5;
+      el.scrollSpy.container = document.getElementById(binding.value.container) || window;
+      el.scrollSpy.visible = binding.value.visible || 0.5;
     }
 
-    let links = [];
+    el.scrollSpy.scrollPosition = el.scrollSpy.container === window ? el.scrollSpy.container.scrollY : el.scrollSpy.container.scrollTop;
 
-    const findHrefs = el => {
-      if (el.attributes && el.attributes.href) {
-        links.push(el);
-      } else if (el.childNodes) {
-        el.childNodes.forEach(child => findHrefs(child));
+    el.scrollSpy.findHrefs = node => {
+      if (node.attributes && node.attributes.href) {
+        el.scrollSpy.links.push(node);
+      } else if (node.childNodes) {
+        node.childNodes.forEach(child => el.scrollSpy.findHrefs(child));
       }
     };
 
-    const setActive = index => {
+    el.scrollSpy.setActive = index => {
       if (binding.value && binding.value.callback) {
         vnode.context[binding.value.callback](index);
         return;
       }
-      links.forEach((link, i) => {
+      el.scrollSpy.links.forEach((link, i) => {
         if (index === i) link.classList.add("active");
         else link.classList.remove("active");
       });
     };
 
-    el.spy = () => {
-      links.forEach((link, i) => {
+    el.scrollSpy.spy = () => {
+      if (el.disableScroll) return;
+
+      const container = el.scrollSpy.container;
+
+      const scrollPosition =
+        container === window ? container.scrollY : container.scrollTop;
+      const direction =
+        scrollPosition - el.scrollSpy.scrollPosition > 0 ? 1 : -1;
+      el.scrollSpy.scrollPosition = scrollPosition;
+
+      el.scrollSpy.links.forEach(link => {
         const element = document.querySelector(link.hash);
         const rect = element.getBoundingClientRect();
 
@@ -37,23 +56,41 @@ export default {
 
         if (container === window) {
           condition =
-            window.scrollY + rect.y + rect.height * visible <=
-            container.scrollY + container.innerHeight;
+            window.innerHeight > rect.top + rect.height * el.scrollSpy.visible &&
+            rect.top + rect.height * (1 - el.scrollSpy.visible) >= 0;
         } else {
           const containerRect = container.getBoundingClientRect();
 
           condition =
-            rect.y + rect.height * visible <=
-            containerRect.y + containerRect.height;
+            rect.top + rect.height * el.scrollSpy.visible <=
+              containerRect.top + containerRect.height &&
+            rect.top + rect.height * (1 - el.scrollSpy.visible) >= containerRect.top;
         }
 
-        if (condition) {
-          setActive(i);
-        }
+        link.isLinkActive = condition;
       });
+
+      const activeLinks = el.scrollSpy.links.filter(link => link.isLinkActive);
+
+      if (activeLinks.length > 0) {
+        const activeElement =
+          direction === 1
+            ? activeLinks[activeLinks.length - 1]
+            : activeLinks[0];
+
+        const activeLink = activeElement.scrollspyIndex;
+
+        el.scrollSpy.setActive(activeLink);
+      } else el.scrollSpy.setActive(-1);
     };
 
-    const scrollHandler = (e, link) => {
+
+
+    el.scrollSpy.clickHandler = (e, link) => {
+      const container = el.scrollSpy.container;
+
+      window.clearTimeout(el.disableScrollTimeout);
+      el.disableScroll = true;
       e.preventDefault();
 
       const element = document.querySelector(link.hash);
@@ -61,11 +98,10 @@ export default {
 
       if (container === window) {
         window.scrollTo({
-          top: window.scrollY + rect.y - rect.height * visible,
+          top: window.scrollY + rect.y - rect.height * el.scrollSpy.visible,
           behavior: "smooth"
         });
       } else {
-        
         const containerRect = container.getBoundingClientRect();
 
         container.style.scrollBehavior = "smooth";
@@ -77,19 +113,29 @@ export default {
           rect.height -
           containerRect.height;
       }
+
+      el.scrollSpy.setActive(link.scrollspyIndex);
+
+      el.disableScrollTimeout = setTimeout(() => {
+        el.disableScroll = false;
+      }, 800);
     };
 
-    findHrefs(el);
+    el.scrollSpy.findHrefs(el);
 
-    links.forEach(link => {
-      link.addEventListener("click", e => scrollHandler(e, link));
+    el.scrollSpy.links.forEach((link, i) => {
+      link.scrollspyIndex = i;
+      link.addEventListener("click", e => el.scrollSpy.clickHandler(e, link));
     });
 
-    el.spy();
+    el.scrollSpy.spy();
 
-    container.addEventListener("scroll", el.spy);
+    el.scrollSpy.container.addEventListener("scroll", el.scrollSpy.spy);
   },
   unbind(el) {
-    window.removeEventListener("scroll", el.spy);
+    window.removeEventListener("scroll", el.scrollSpy.spy);
   }
 };
+
+export default ScrollSpy;
+export { ScrollSpy as mdbScrollSpy, ScrollSpy };
