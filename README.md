@@ -8,7 +8,7 @@ MDB is a collection of free Bootstrap templates, themes, design tools & resource
 
 #### Newer version is available for Bootstrap 5. We recommend migrating to the latest version of our product
 
-### [>> Get 700+ material UI components, free hosting, super simple 1 minute installation & much more](https://mdbootstrap.com/docs/b5/vue/)
+#### [>> Get 700+ material UI components, free hosting, super simple 1 minute installation & much more](https://mdbootstrap.com/docs/b5/vue/)
 
 ---
 
