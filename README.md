@@ -82,7 +82,7 @@ ___
   <tbody>
     <tr>
       <td align="center">
-         <a href="https://mdbootstrap.com/docs/b5/react/getting-started/" alt="Bootstrap Tutorials" rel="dofollow">
+         <a href="https://mdbootstrap.com/docs/standard/getting-started/" alt="Bootstrap Tutorials" rel="dofollow">
           		<img src="https://mdbootstrap.com/wp-content/uploads/2020/12/learnmore-1.png">
           </a>
       </td>
@@ -95,7 +95,7 @@ ___
      <tr>
         <td align="center">
           <p align="center"><b>Start learning from Basics</b></p>
-          <a href="https://mdbootstrap.com/docs/b5/react/getting-started/" alt="Bootstrap 5" rel="dofollow">
+          <a href="https://mdbootstrap.com/docs/standard/getting-started/" alt="Bootstrap 5" rel="dofollow">
           		<img src="https://mdbootstrap.com/wp-content/uploads/2020/12/Screenshot_26.png">
           </a>
          </td>
@@ -114,7 +114,7 @@ ___
 
 # Demo
 
-#### Simplicity and ease of use are key features of MDB 4 React UI Kit. You need only one minute to install and run it.
+#### Simplicity and ease of use are key features of MDB 4 Vue UI Kit. You need only one minute to install and run it.
 
 ### Buttons
 
