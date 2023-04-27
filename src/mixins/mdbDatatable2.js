@@ -223,6 +223,10 @@ export const mdbDatatable2 = {
     editable: {
       type: Boolean,
       default: false
+    },
+    small: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

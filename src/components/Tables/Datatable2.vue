@@ -8,6 +8,7 @@
       class="scrollbar-grey thin"
       :class="{ 'mdb-scroll-y': scrollY }"
       :style="`max-height: ${scrollY ? maxHeight ? maxHeight : '280px' : null};`"
+      :sm="small"
     >
       <mdb-tbl-head
         :color="headerColor"
@@ -66,6 +67,8 @@
           :class="
             `${(selectable || multiselectable) && 'selectable-row'} ${
               (selectable || multiselectable) && (rowsDisplay.indexOf(row) === selected || selected === 'all' || Array.isArray(selected) && selected.includes(rowsDisplay.indexOf(row))) ? selectColor : ''
+            } ${
+              rowsDisplay.indexOf(row) === hovered ? hoverColor : ''
             }`
           "
           :style="(selectable || multiselectable) && rowsDisplay.indexOf(row) === hovered && {backgroundColor: hoverColor}"
@@ -131,6 +134,18 @@
               <mdb-icon v-if="arrows" icon="chevron-left" />
               <p v-else class="pagination">{{ previous }}</p>
             </mdb-page-item>
+            <template v-if="fullPagination">
+              <mdb-page-item
+                v-for="(page, index) in visiblePages"
+                :key="index"
+                v-on:click.native="changePage(pages.indexOf(visiblePages[index]))"
+                :active="
+                  activePage === pages.indexOf(visiblePages[index]) ? true : false
+                "
+              >
+                {{ pages.indexOf(visiblePages[index]) + 1 }}
+              </mdb-page-item>
+            </template>
             <mdb-page-item
               v-on:click.native="changePage(activePage + 1)"
               :disabled="activePage === pages.length - 1 ? true : false"
